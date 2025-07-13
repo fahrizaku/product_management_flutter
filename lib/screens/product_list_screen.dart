@@ -120,12 +120,12 @@ class _ProductListScreenState extends State<ProductListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Produk'),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(60),
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
+      // Hapus appBar dari sini untuk menghindari duplikasi header
+      body: Column(
+        children: [
+          // Search field dipindahkan ke dalam body
+          Padding(
+            padding: const EdgeInsets.all(16.0),
             child: TextField(
               controller: searchController,
               decoration: InputDecoration(
@@ -150,9 +150,15 @@ class _ProductListScreenState extends State<ProductListScreen> {
               },
             ),
           ),
-        ),
+          // Bungkus _buildBody() dengan Expanded untuk mengisi sisa ruang
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: loadProducts,
+              child: _buildBody(),
+            ),
+          ),
+        ],
       ),
-      body: RefreshIndicator(onRefresh: loadProducts, child: _buildBody()),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final result = await Navigator.push(

@@ -11,23 +11,15 @@ class ApiService {
   // Get all products
   static Future<List<Product>> getProducts() async {
     try {
-      print('🔍 API Base URL: $baseUrl');
-      print('🔍 Products URL: $productsUrl');
-
       final response = await http.get(Uri.parse(productsUrl));
-
-      print('🔍 Response status: ${response.statusCode}');
-      print('🔍 Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
-        print('🔍 Parsed data count: ${data.length}');
         return data.map((json) => Product.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load products: ${response.statusCode}');
       }
     } catch (e) {
-      print('❌ API Error: $e');
       throw Exception('Error fetching products: $e');
     }
   }

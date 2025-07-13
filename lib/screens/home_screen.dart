@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/api_service.dart';
 import '../widgets/common_widgets.dart';
-import 'product_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -182,34 +181,40 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 24),
           ],
 
-          // Quick Actions
+          // Quick Actions - Hanya refresh data
           Text('Aksi Cepat', style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: _buildActionCard(
-                  title: 'Lihat Semua Produk',
-                  icon: Icons.list,
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const ProductListScreen(),
-                      ),
-                    );
-                  },
-                ),
+          Center(
+            child: SizedBox(
+              width: double.infinity,
+              child: _buildActionCard(
+                title: 'Refresh Data',
+                icon: Icons.refresh,
+                onTap: loadDashboardData,
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _buildActionCard(
-                  title: 'Refresh Data',
-                  icon: Icons.refresh,
-                  onTap: loadDashboardData,
-                ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Info untuk navigasi ke produk
+          Card(
+            color: Colors.blue[50],
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Row(
+                children: [
+                  Icon(Icons.info, color: Colors.blue[700]),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      'Untuk melihat dan mengelola produk, gunakan tab "Produk" di bawah.',
+                      style: TextStyle(fontSize: 14, color: Colors.blue[700]),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ],
       ),
@@ -257,6 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Card(
       child: InkWell(
         onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
