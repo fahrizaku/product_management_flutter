@@ -1,9 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    
+
     <application
-        android:label="hello_flutter1"
+        android:label="Inventory Manager"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
