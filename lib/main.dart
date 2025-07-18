@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true, // Menggunakan Material Design 3
         // Tema untuk AppBar
         appBarTheme: const AppBarTheme(
-          backgroundColor: Colors.orange, // Ganti warna latar
+          backgroundColor: Colors.blue, // Ganti warna latar
           foregroundColor: Colors.white, // Ganti warna teks/icon
           centerTitle: false, // Judul ditengah
           elevation: 0, // Tanpa bayangan
