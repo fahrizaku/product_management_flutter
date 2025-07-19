@@ -1,7 +1,7 @@
 // lib/screens/product_form_screen.dart
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import '../services/api_service.dart';
+import '../services/api_service_product.dart';
 
 class ProductFormScreen extends StatefulWidget {
   final Product? product;

@@ -1,7 +1,7 @@
 // lib/screens/product_list_screen.dart
 import 'package:flutter/material.dart';
 import '../models/product.dart';
-import '../services/api_service.dart';
+import '../services/api_service_product.dart';
 import '../widgets/product_card.dart';
 import '../widgets/common_widgets.dart';
 import 'product_form_screen.dart';
