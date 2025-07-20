@@ -4,6 +4,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/home_screen.dart';
 import 'screens/product_list_screen.dart';
 import 'screens/settings_screen.dart';
+import 'screens/auth_wrapper.dart';
+import 'services/api_service_auth.dart';
 
 // Fungsi utama aplikasi yang dijalankan pertama kali
 Future<void> main() async {
@@ -70,7 +72,7 @@ class MyApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const MainScreen(), // Halaman utama aplikasi
+      home: const AuthWrapper(), // Menggunakan AuthWrapper sebagai halaman awal
     );
   }
 }
@@ -100,6 +102,16 @@ class _MainScreenState extends State<MainScreen> {
     });
   }
 
+  // Fungsi logout
+  Future<void> _logout() async {
+    await ApiServiceAuth.logout();
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const AuthWrapper()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,6 +124,36 @@ class _MainScreenState extends State<MainScreen> {
               ? 'Produk'
               : 'Pengaturan',
         ),
+        actions: [
+          // Tombol logout
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text('Konfirmasi'),
+                    content: const Text('Apakah Anda yakin ingin keluar?'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Batal'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          _logout();
+                        },
+                        child: const Text('Keluar'),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
+          ),
+        ],
       ),
       body: _pages[_selectedIndex], // Menampilkan halaman sesuai index
       bottomNavigationBar: BottomNavigationBar(
