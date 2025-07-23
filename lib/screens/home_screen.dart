@@ -1,7 +1,9 @@
 // lib/screens/home_screen.dart
 import 'package:flutter/material.dart';
 import '../models/product.dart';
+import '../models/user_login_response.dart';
 import '../services/api_service_product.dart';
+import '../services/api_service_auth.dart';
 import '../widgets/common_widgets.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,6 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<Product> products = [];
+  User? currentUser;
   bool isLoading = true;
   String? error;
 
@@ -29,8 +32,16 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     try {
-      final fetchedProducts = await ApiService.getProducts();
+      // Load user data dan products secara bersamaan
+      final userFuture = ApiServiceAuth.getCurrentUser();
+      final productsFuture = ApiService.getProducts();
+
+      final results = await Future.wait([userFuture, productsFuture]);
+      final user = results[0] as User?;
+      final fetchedProducts = results[1] as List<Product>;
+
       setState(() {
+        currentUser = user;
         products = fetchedProducts;
         isLoading = false;
       });
@@ -64,21 +75,51 @@ class _HomeScreenState extends State<HomeScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Welcome Card
+          // Welcome Card dengan nama user
           Card(
             child: Padding(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Selamat Datang!',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  Text(
+                    'Selamat Datang, ${currentUser?.name ?? 'User'}!',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: 8),
                   Text(
                     'Kelola produk Anda dengan mudah',
                     style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                  ),
+                  const SizedBox(height: 8),
+                  // Tambahan info user
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.blue[50],
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.person, size: 16, color: Colors.blue[700]),
+                        const SizedBox(width: 4),
+                        Text(
+                          currentUser?.email ?? '',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue[700],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
